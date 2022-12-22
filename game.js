@@ -95,25 +95,42 @@ btnRight.addEventListener('click', moveRight);
 window.addEventListener('keydown', moveByKeys); //esto lo  que hace es escuchar al teclado cuando presionamos una tecla y lo mandamos a ejecutar la funcion moveByKeys
 
 function moveUp() {
-    console.log('ARRIBA');
-    playerPosition.y -= elementsSize; //estamos diciendo que se mueva en la posición Y restándole lo que el propio elemento mide. Se lo restamois porque el 0,0 de nuestro canvas es el margen superior izquierda por tanto, en el primer mapa estamos en la posición x=0 e y= -(algo) y el wc está en la posición 0,0
-    // movePlayer();//con esto lo que hacemos es renderizar el jugador cada vez que toquemos la tecla hacia arriba pero no nos borra lo anterior
-    startGame();//con esta ahora que tenemos el clearRect() si vamos a eliminar nuestros pasos además de poder mover al jugador ya que la función anterior está dentro de startGame
+    if ((playerPosition.y -elementsSize) < elementsSize) { //esto nor permite no salirnos del canvas por la parte superior y lo que le decimos es que no puede ser mayor que el propio elemento porque sino se nos saldría
+        console.warn('Te querés salir pelotudo? 😐');
+    } else {
+        console.log('ARRIBA');
+        playerPosition.y -= elementsSize; //estamos diciendo que se mueva en la posición Y restándole lo que el propio elemento mide. Se lo restamois porque el 0,0 de nuestro canvas es el margen superior izquierda por tanto, en el primer mapa estamos en la posición x=0 e y= -(algo) y el wc está en la posición 0,0
+        // movePlayer();//con esto lo que hacemos es renderizar el jugador cada vez que toquemos la tecla hacia arriba pero no nos borra lo anterior
+        startGame();//con esta ahora que tenemos el clearRect() si vamos a eliminar nuestros pasos además de poder mover al jugador ya que la función anterior está dentro de startGame
+    };
 };
 function moveDown() {
-    console.log('ABAJO');
-    playerPosition.y += elementsSize;
-    startGame();
+    if ((playerPosition.y - elementsSize) > canvasSize ){
+        console.warn('Te querés salir pelotudo? 😐');
+    } else {
+        console.log('ABAJO');
+        playerPosition.y += elementsSize;
+        startGame();
+    }
+    
 };
 function moveLeft() {
-    console.log('LEFT');
-    playerPosition.x -= elementsSize;
-    startGame();
+    if ((playerPosition.x - elementsSize) <= elementsSize) { //esto nor permite no salirnos del canvas por la parte superior y lo que le decimos es que no puede ser mayor que el propio elemento porque sino se nos saldría
+        console.warn('Te querés salir pelotudo? 😐');
+    } else {
+        console.log('LEFT');
+        playerPosition.x -= elementsSize;
+        startGame();
+    }
 };
 function moveRight() {
-    console.log('RIGHT');
-    playerPosition.x += elementsSize;
-    startGame();
+    if ((playerPosition.x + elementsSize) >= canvasSize) {
+        console.warn('Te querés salir pelotudo? 😐');
+    } else {
+        console.log('RIGHT');
+        playerPosition.x += elementsSize;
+        startGame();
+    }
 };
 function moveByKeys (event) {
     if (event.key == 'ArrowUp') {
