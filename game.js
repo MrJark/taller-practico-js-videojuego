@@ -90,6 +90,6 @@ function moveByKeys (event) {
     } else if (event.key == 'ArrowRight') {
         moveRight();
     } else {
-        console.warn('🤨 No estás entendiendo el juego...')
+        console.warn('🤨 No estás entendiendo el juego...');
     };
 };
