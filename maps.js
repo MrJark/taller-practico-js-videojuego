@@ -6,11 +6,11 @@
 const emojis = {
     '-': ' ',
     'O': '🚪',
-    'X': '💣',
-    'I': '🎁',
-    'PLAYER': '💀',
-    'BOMB_COLLISION': '🔥',
-    'GAME_OVER': '👎',
+    'X': '💩',
+    'I': '🚽',
+    'PLAYER': '🏃🏽',
+    'POPO_COLLISION': '👀',
+    'GAME_OVER': '💩🤦🏼‍♂️😶‍🌫️',
     'WIN': '🏆',
   };
   

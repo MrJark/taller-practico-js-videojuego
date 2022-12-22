@@ -13,6 +13,12 @@ const btnRight = document.querySelector('#right');
 let canvasSize;
 let elementsSize;
 
+//creamos una variable con dos posiciones para poder mover a nuestro humano por el campo de minas
+const playerPosition = {
+    x: undefined,
+    y: undefined,
+};
+
 window.addEventListener('load', setCanvasSize); //esta linea nos dice que a venas la pantalla carge (load) inicialice la función startGame
 window.addEventListener('resize', setCanvasSize); //este evento lo que nos hace es recargar la página cuando sufra nuestra pantalla un resize. Ya sea en portatil para abir la consola o en el móvil cuando giramos la pantalla. El problema de este es que tenemos que vincular al resize los elementos que ya estaban en la pantalla que ya automaticamente me los elimina todos
 
@@ -49,17 +55,32 @@ function startGame() {
             const emoji = emojis[colums];// aquí estamos obteniendo el emoji por cada elemento de la columna que estemos leyendo en el código
             const positionX = elementsSize * (columsIndex + 1);
             const positionY = elementsSize * (rowIndex + 1);// las positionX y positionY nos dan las posiciones de cada uno de los emojis y a estos le sumamos 1 porque siempre empezamos a contar desde el 0 y los elementos, en este caso los emojis, sus inicios son el propio final del emoji, por tanto si queremos que aparezcan enteros tenemos que sumarle uno para que así estén en la posición visible. (Seria como empezar en la posición dos y acabar en la 1 ya que el inicio de la columna es el propio final del mismo) 
+            
+            //condicional para colocar a nuestro jugador
+            if ( colums == 'O') {
+                playerPosition.x = positionX;
+                playerPosition.y = positionY;
+                console.log({playerPosition, positionX, positionY});
+            }
+
             game.fillText(emoji, positionX, positionY);
         });
-    });
 
+    });
+  
     // for (let i = 1; i <= 10; i++) { //el ciclo es para por los 10 elementos con menos código y empezamos con i = 1 para que nos de los 10 elementos y no 9 y un conjunto vacío que sería el 10
     //     for (let j = 1; j <= 10; j++){ //colocamos un for dentro de otro para tener las columsnas y filas a la vez
     //         // game.fillText(emojis['X'], elementsSizee * j, elementsSizee * i)//esto es para colocar el emoji que esté guardado como X y le estamos dando un posición elementSize y cada vez que añadimos un elemento lo corremos el elemento anterios tanto a la darecha (primer elementSize * i) como hacia abajo
     //         game.fillText(emojis[mapRowColums[i - 1][j - 1]], elementsSizee * j, elementsSizee * i);// lo que hacemos aquí es dar a cada elemento del mapa el emoji que le correponde y le estamos restando a i y j 1 porque aquí es donde deben empezar desde la posición cero y no desde la 1 como le habiamos dicho en los ciclos for
     //     };
     // };
+
+    movePlayer();
 };
+
+function movePlayer () { ////renderizar a nuestro player
+    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+}
 
 //funciones para que los botones duncionen
 btnUp.addEventListener('click', moveUp);
@@ -70,6 +91,9 @@ window.addEventListener('keydown', moveByKeys); //esto lo  que hace es escuchar 
 
 function moveUp() {
     console.log('ARRIBA');
+    playerPosition.y -= elementsSize; //estamos diciendo que se mueva en la posición Y restándole lo que el propio elemento mide. Se lo restamois porque el 0,0 de nuestro canvas es el margen superior izquierda por tanto, en el primer mapa estamos en la posición x=0 e y= -(algo) y el wc está en la posición 0,0
+    movePlayer();//con esto lo que hacemos es renderizar el jugador cada vez que toquemos la tecla hacia arriba
+    
 };
 function moveDown() {
     console.log('ABAJO');
