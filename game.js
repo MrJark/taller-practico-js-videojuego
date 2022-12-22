@@ -49,6 +49,9 @@ function startGame() {
     const mapRow = map.trim().split('\n');// esto es para crear unn mapa más limpio. El .trim() nos elimina los espacios vacíos al inicio y final de cada row (nos lo limpia) y con el .split('\n') le estamos diciendo que haga un salto  de linea (creando un nuevo elemento) cuando aparezca el '\n'
     const mapRowColums = mapRow.map(row => row.trim().split(''));// aquí estamos creando un arreglo de cada row en el que le estamos diciendo que por cada row, sea cada una de ella, no solo un string y ya, sino que sea un arreglo donde cada letra es un elemento
 
+    //Método para borrar los emojis por donde ya habíamos pasado. Como en canvas no se puede eliminar un solo emoji, sino que tenemos que eliminar la capa en las que se encuenta, nuestra puerta de inicio también tendríamos que eliminarla y como no queremos eso, lo que vamos a hacer es borrar todo el canvas e inmediatamente crearlo todo de nuevo pero con la nueva posición
+    game.clearRect(0,0, canvasSize, canvasSize);//esto es lo que nos permite borrar todo el canvas dándole como límites desde la posición inicial, la 0,0, hasta la final que es lo que mide el canvas, canvasSize, canvasSize.
+
     //el código a continuación, sustituye de una manera más legible el for
     mapRowColums.forEach((row, rowIndex) => {//con el método forEach recorremos el array mapRowColums y estamos enviando como parámetros las filas y el indice de cada fila
         row.forEach((colums, columsIndex) => {//a partir de cada fila anterior, estamos recorriendo las columnas para encontrar la columna y su índice
@@ -58,9 +61,11 @@ function startGame() {
             
             //condicional para colocar a nuestro jugador
             if ( colums == 'O') {
-                playerPosition.x = positionX;
-                playerPosition.y = positionY;
-                console.log({playerPosition, positionX, positionY});
+                if (!playerPosition.x && !playerPosition.y) {//este segundo condicional nos sire para decir que si playerPosition es != a undefined, guarde esas variables cuando haga el clearRect
+                    playerPosition.x = positionX;
+                    playerPosition.y = positionY;
+                    console.log({playerPosition, positionX, positionY});
+                }
             }
 
             game.fillText(emoji, positionX, positionY);
@@ -78,7 +83,7 @@ function startGame() {
     movePlayer();
 };
 
-function movePlayer () { ////renderizar a nuestro player
+function movePlayer () { //renderizar a nuestro player
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
 
@@ -92,17 +97,23 @@ window.addEventListener('keydown', moveByKeys); //esto lo  que hace es escuchar 
 function moveUp() {
     console.log('ARRIBA');
     playerPosition.y -= elementsSize; //estamos diciendo que se mueva en la posición Y restándole lo que el propio elemento mide. Se lo restamois porque el 0,0 de nuestro canvas es el margen superior izquierda por tanto, en el primer mapa estamos en la posición x=0 e y= -(algo) y el wc está en la posición 0,0
-    movePlayer();//con esto lo que hacemos es renderizar el jugador cada vez que toquemos la tecla hacia arriba
-    
+    // movePlayer();//con esto lo que hacemos es renderizar el jugador cada vez que toquemos la tecla hacia arriba pero no nos borra lo anterior
+    startGame();//con esta ahora que tenemos el clearRect() si vamos a eliminar nuestros pasos además de poder mover al jugador ya que la función anterior está dentro de startGame
 };
 function moveDown() {
     console.log('ABAJO');
+    playerPosition.y += elementsSize;
+    startGame();
 };
 function moveLeft() {
     console.log('LEFT');
+    playerPosition.x -= elementsSize;
+    startGame();
 };
 function moveRight() {
     console.log('RIGHT');
+    playerPosition.x += elementsSize;
+    startGame();
 };
 function moveByKeys (event) {
     if (event.key == 'ArrowUp') {
