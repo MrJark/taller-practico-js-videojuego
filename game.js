@@ -4,12 +4,18 @@
 const canvas = document.querySelector('#game');
 //tengo que acceder  los métodos para dibujar en el canvas y eso lo hacemos con:
 const game = canvas.getContext('2d'); //para decirle que olo tenemos dos coordenadas
+//ahora creamos las const para los botones que me permitirán moverme por el canvas
+const btnUp = document.querySelector('#up');
+const btnDown = document.querySelector('#down');
+const btnLeft = document.querySelector('#left');
+const btnRight = document.querySelector('#right');
 
 let canvasSize;
 let elementsSize;
 
 window.addEventListener('load', setCanvasSize); //esta linea nos dice que a venas la pantalla carge (load) inicialice la función startGame
 window.addEventListener('resize', setCanvasSize); //este evento lo que nos hace es recargar la página cuando sufra nuestra pantalla un resize. Ya sea en portatil para abir la consola o en el móvil cuando giramos la pantalla. El problema de este es que tenemos que vincular al resize los elementos que ya estaban en la pantalla que ya automaticamente me los elimina todos
+
 
 //creanos esta función dividiendo el código que estaba antes en startGame para que así esté todo más limpio y ordenado
 function setCanvasSize () {
@@ -28,7 +34,6 @@ function setCanvasSize () {
 
     startGame();
 };
-
 function startGame() {
 
     game.font = elementsSize + 'px Poppins';// esto es para darle tamaño a los emojis
@@ -54,4 +59,37 @@ function startGame() {
     //         game.fillText(emojis[mapRowColums[i - 1][j - 1]], elementsSizee * j, elementsSizee * i);// lo que hacemos aquí es dar a cada elemento del mapa el emoji que le correponde y le estamos restando a i y j 1 porque aquí es donde deben empezar desde la posición cero y no desde la 1 como le habiamos dicho en los ciclos for
     //     };
     // };
+};
+
+//funciones para que los botones duncionen
+btnUp.addEventListener('click', moveUp);
+btnDown.addEventListener('click', moveDown);
+btnLeft.addEventListener('click', moveLeft);
+btnRight.addEventListener('click', moveRight);
+window.addEventListener('keydown', moveByKeys); //esto lo  que hace es escuchar al teclado cuando presionamos una tecla y lo mandamos a ejecutar la funcion moveByKeys
+
+function moveUp() {
+    console.log('ARRIBA');
+};
+function moveDown() {
+    console.log('ABAJO');
+};
+function moveLeft() {
+    console.log('LEFT');
+};
+function moveRight() {
+    console.log('RIGHT');
+};
+function moveByKeys (event) {
+    if (event.key == 'ArrowUp') {
+        moveUp();
+    } else if (event.key == 'ArrowDown') {
+        moveDown();
+    } else if (event.key == 'ArrowLeft') {
+        moveLeft();
+    } else if (event.key == 'ArrowRight') {
+        moveRight();
+    } else {
+        console.warn('🤨 No estás entendiendo el juego...')
+    };
 };
