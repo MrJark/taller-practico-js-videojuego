@@ -23,7 +23,7 @@ const playerPosition = {
 const giftPosition = {
     x: undefined,
     y: undefined,
-};
+  };
 let enemyPositions = []; //es let par poder darle unos valores distintos cuando la limpiemos
 
 window.addEventListener('load', setCanvasSize); //esta linea nos dice que a venas la pantalla carge (load) inicialice la función startGame
@@ -34,10 +34,12 @@ window.addEventListener('resize', setCanvasSize); //este evento lo que nos hace 
 function setCanvasSize () {
 
     if (window.innerHeight > window.innerWidth) {
-        canvasSize = window.innerWidth * 0.75; //ojo a los puntos, si ponemos comas no funciona
+        canvasSize = window.innerWidth * 0.7; //ojo a los puntos, si ponemos comas no funciona
     } else {
-        canvasSize = window.innerHeight * 0.75;
+        canvasSize = window.innerHeight * 0.7;
     }// este condicional nos hace que cuando la vertical del html sea mayor que el ancho, tome como referencia para calcular el tamaño del canvas el ancho ya que es el más pequeño y es el que será responsive y viceversa con el else.
+
+    // canvasSize = Number(canvasSize.toFixed(0));
 
     canvas.setAttribute('width', canvasSize);
     canvas.setAttribute('height', canvasSize);
@@ -73,10 +75,11 @@ function startGame() {
                 if (!playerPosition.x && !playerPosition.y) {//este segundo condicional nos sire para decir que si playerPosition es != a undefined, guarde esas variables cuando haga el clearRect
                     playerPosition.x = positionX;
                     playerPosition.y = positionY;
-                    console.log({playerPosition});
+                    // console.log({playerPosition});
                 } else if ( colums == 'I' ) { //este segundo if es el que colocamos para cuando nuestro jugador se encuentre con el "regalio" del wc
                     giftPosition.x = positionX;
                     giftPosition.y = positionY;
+                    // console.log({giftPosition});
                 } else if ( colums == 'X' ) { // este if lo colocamos para encontrar las colisiones con las kks
                     enemyPositions.push({ //le tenemos que hacer push porque es un array
                         x: positionX,
@@ -86,8 +89,8 @@ function startGame() {
             };
             game.fillText(emoji, positionX, positionY);
         });
-
     });
+    console.log({playerPosition, giftPosition});
     // for (let i = 1; i <= 10; i++) { //el ciclo es para por los 10 elementos con menos código y empezamos con i = 1 para que nos de los 10 elementos y no 9 y un conjunto vacío que sería el 10
     //     for (let j = 1; j <= 10; j++){ //colocamos un for dentro de otro para tener las columsnas y filas a la vez
     //         // game.fillText(emojis['X'], elementsSizee * j, elementsSizee * i)//esto es para colocar el emoji que esté guardado como X y le estamos dando un posición elementSize y cada vez que añadimos un elemento lo corremos el elemento anterios tanto a la darecha (primer elementSize * i) como hacia abajo
@@ -101,17 +104,17 @@ function movePlayer () { //renderizar a nuestro player
 
     //condicional para ver si hubo colision con la giftPosition
     //con tantos condicionales es probable que nos den muchos decimales y a la hora de encontrar la colisión puede que alguno de estos decimales no coincida y nos de un error aunqeu estemos colisionando, por ese motivo ponemos el método .toFixed() para que solo nos cuente los decimales que nosotros le pongamos en el método y no haya errores en el juego
-    const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
-    const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
+    const giftCollisionX = playerPosition.x == giftPosition.x;
+    const giftCollisionY = playerPosition.y == giftPosition.y;
     const giftCollisions = giftCollisionX && giftCollisionY;
 
     if (giftCollisions) {
-        console.log('Llegaste por los pelos 😮‍💨');
+        console.log('Llegaste por los pelos! 😮‍💨');
     }
 
     const enemyCollision = enemyPositions.find( enemy => { //esto es para detectar las colisiones con las kks
-        const enemyCollisionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
-        const enemyCollisionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
+        const enemyCollisionX = enemy.x == playerPosition.x;
+        const enemyCollisionY = enemy.y == playerPosition.y;
 
         return enemyCollisionX && enemyCollisionY;
     })
