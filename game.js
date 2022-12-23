@@ -102,20 +102,19 @@ function moveUp() {
         playerPosition.y -= elementsSize; //estamos diciendo que se mueva en la posición Y restándole lo que el propio elemento mide. Se lo restamois porque el 0,0 de nuestro canvas es el margen superior izquierda por tanto, en el primer mapa estamos en la posición x=0 e y= -(algo) y el wc está en la posición 0,0
         // movePlayer();//con esto lo que hacemos es renderizar el jugador cada vez que toquemos la tecla hacia arriba pero no nos borra lo anterior
         startGame();//con esta ahora que tenemos el clearRect() si vamos a eliminar nuestros pasos además de poder mover al jugador ya que la función anterior está dentro de startGame
-    };
+    }
 };
 function moveDown() {
-    if ((playerPosition.y - elementsSize) > canvasSize ){
+    if ((playerPosition.y + elementsSize) > canvasSize ){
         console.warn('Te querés salir pelotudo? 😐');
     } else {
         console.log('ABAJO');
         playerPosition.y += elementsSize;
         startGame();
     }
-    
 };
 function moveLeft() {
-    if ((playerPosition.x - elementsSize) <= elementsSize) { //esto nor permite no salirnos del canvas por la parte superior y lo que le decimos es que no puede ser mayor que el propio elemento porque sino se nos saldría
+    if ((playerPosition.x - elementsSize) < elementsSize) { //esto nor permite no salirnos del canvas por la parte superior y lo que le decimos es que no puede ser mayor que el propio elemento porque sino se nos saldría
         console.warn('Te querés salir pelotudo? 😐');
     } else {
         console.log('LEFT');
@@ -124,7 +123,7 @@ function moveLeft() {
     }
 };
 function moveRight() {
-    if ((playerPosition.x + elementsSize) >= canvasSize) {
+    if ((playerPosition.x + elementsSize) > canvasSize) {
         console.warn('Te querés salir pelotudo? 😐');
     } else {
         console.log('RIGHT');
@@ -132,16 +131,22 @@ function moveRight() {
         startGame();
     }
 };
-function moveByKeys (event) {
-    if (event.key == 'ArrowUp') {
-        moveUp();
-    } else if (event.key == 'ArrowDown') {
-        moveDown();
-    } else if (event.key == 'ArrowLeft') {
-        moveLeft();
-    } else if (event.key == 'ArrowRight') {
-        moveRight();
-    } else {
-        console.warn('🤨 No estás entendiendo el juego...');
-    };
-};
+function moveByKeys(event) { //est ees el mismo código que el de abajo pero más estético y limpio (solo se puede usar en ocasiones muy específicas)
+    if (event.key == 'ArrowUp') moveUp();
+    else if (event.key == 'ArrowLeft') moveLeft();
+    else if (event.key == 'ArrowRight') moveRight();
+    else if (event.key == 'ArrowDown') moveDown();
+// function moveByKeys (event) {
+//     if (event.key == 'ArrowUp') {
+//         moveUp();
+//     } else if (event.key == 'ArrowDown') {
+//         moveDown();
+//     } else if (event.key == 'ArrowLeft') {
+//         moveLeft();
+//     } else if (event.key == 'ArrowRight') {
+//         moveRight();
+//     } else {
+//         console.warn('🤨 No estás entendiendo el juego...');
+//     };
+// };
+}
