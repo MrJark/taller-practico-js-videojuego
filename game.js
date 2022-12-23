@@ -24,7 +24,7 @@ const giftPosition = {
     x: undefined,
     y: undefined,
 };
-const enemiesPositions = [];
+let enemyPositions = []; //es let par poder darle unos valores distintos cuando la limpiemos
 
 window.addEventListener('load', setCanvasSize); //esta linea nos dice que a venas la pantalla carge (load) inicialice la función startGame
 window.addEventListener('resize', setCanvasSize); //este evento lo que nos hace es recargar la página cuando sufra nuestra pantalla un resize. Ya sea en portatil para abir la consola o en el móvil cuando giramos la pantalla. El problema de este es que tenemos que vincular al resize los elementos que ya estaban en la pantalla que ya automaticamente me los elimina todos
@@ -56,6 +56,9 @@ function startGame() {
     const mapRow = map.trim().split('\n');// esto es para crear unn mapa más limpio. El .trim() nos elimina los espacios vacíos al inicio y final de cada row (nos lo limpia) y con el .split('\n') le estamos diciendo que haga un salto  de linea (creando un nuevo elemento) cuando aparezca el '\n'
     const mapRowColums = mapRow.map(row => row.trim().split(''));// aquí estamos creando un arreglo de cada row en el que le estamos diciendo que por cada row, sea cada una de ella, no solo un string y ya, sino que sea un arreglo donde cada letra es un elemento
 
+    //Método para borrar los arrays de las kks una vez volvamos a renderizar el mapa por cada iteración del jugardor
+    enemyPositions = [];//lo que hacemos es eliminar todo lo que teníamos para que salga otra vez vacía
+    
     //Método para borrar los emojis por donde ya habíamos pasado. Como en canvas no se puede eliminar un solo emoji, sino que tenemos que eliminar la capa en las que se encuenta, nuestra puerta de inicio también tendríamos que eliminarla y como no queremos eso, lo que vamos a hacer es borrar todo el canvas e inmediatamente crearlo todo de nuevo pero con la nueva posición
     game.clearRect(0,0, canvasSize, canvasSize);//esto es lo que nos permite borrar todo el canvas dándole como límites desde la posición inicial, la 0,0, hasta la final que es lo que mide el canvas, canvasSize, canvasSize.
 
@@ -74,11 +77,13 @@ function startGame() {
                 } else if ( colums == 'I' ) { //este segundo if es el que colocamos para cuando nuestro jugador se encuentre con el "regalio" del wc
                     giftPosition.x = positionX;
                     giftPosition.y = positionY;
-                } else if ( colums == 'X' ) { //
-
+                } else if ( colums == 'X' ) { // este if lo colocamos para encontrar las colisiones con las kks
+                    enemyPositions.push({ //le tenemos que hacer push porque es un array
+                        x: positionX,
+                        y: positionY,
+                    });
                 }
             };
-
             game.fillText(emoji, positionX, positionY);
         });
 
@@ -93,17 +98,27 @@ function startGame() {
 };
 
 function movePlayer () { //renderizar a nuestro player
-    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 
     //condicional para ver si hubo colision con la giftPosition
     //con tantos condicionales es probable que nos den muchos decimales y a la hora de encontrar la colisión puede que alguno de estos decimales no coincida y nos de un error aunqeu estemos colisionando, por ese motivo ponemos el método .toFixed() para que solo nos cuente los decimales que nosotros le pongamos en el método y no haya errores en el juego
-    const giftColisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
-    const giftColisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
-    const giftColitions = giftColisionX && giftColisionY;
+    const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
+    const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
+    const giftCollisions = giftCollisionX && giftCollisionY;
 
-    if (giftColitions) {
-        console.log('Te cagaste wei!😖');
+    if (giftCollisions) {
+        console.log('Llegaste por los pelos 😮‍💨');
     }
+
+    const enemyCollision = enemyPositions.find( enemy => { //esto es para detectar las colisiones con las kks
+        const enemyCollisionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
+        const enemyCollisionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
+
+        return enemyCollisionX && enemyCollisionY;
+    })
+    if (enemyCollision){
+        console.warn('Te cagaste wei! 🤢');
+    }
+    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 };
 
 //funciones para que los botones duncionen
