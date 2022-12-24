@@ -9,9 +9,13 @@ const btnUp = document.querySelector('#up');
 const btnDown = document.querySelector('#down');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
+const spanLives = document.querySelector('#lives');
+
 
 let canvasSize;
 let elementsSize;
+let level = 0;
+let lives = 5;
 
 //creamos una variable con dos posiciones para poder mover a nuestro humano por el campo de minas
 //Recordemos!!! 
@@ -54,9 +58,16 @@ function startGame() {
     game.font = elementsSize + 'px Poppins';// esto es para darle tamaño a los emojis
     game.textAlign = 'end'; //esto es para posicionar el elemento en la posición que nosotros queramos
 
-    const map = maps[0]; //el número de aquí nos dice que mapas tenemos en el canvas, es decir, entra a la posición 0, 1 0 2 de maps en maps.js 
+    const map = maps[level]; //el número de aquí nos dice que mapas tenemos en el canvas, es decir, entra a la posición 0, 1 0 2 de maps en maps.js. Ahora le hemos puesto level para que la variable vaya cambiando con forme vamos ganando y sea algo dinámico y no manual 
+    if (!map) {//función para cuando ya no queda ningún mapa y los hemos completado todos
+        gameWin();
+        return;
+    }
+    
     const mapRow = map.trim().split('\n');// esto es para crear unn mapa más limpio. El .trim() nos elimina los espacios vacíos al inicio y final de cada row (nos lo limpia) y con el .split('\n') le estamos diciendo que haga un salto  de linea (creando un nuevo elemento) cuando aparezca el '\n'
     const mapRowColums = mapRow.map(row => row.trim().split(''));// aquí estamos creando un arreglo de cada row en el que le estamos diciendo que por cada row, sea cada una de ella, no solo un string y ya, sino que sea un arreglo donde cada letra es un elemento
+
+    showLives();//para que desde el inicio se muestren las vidas
 
     //Método para borrar los arrays de las kks una vez volvamos a renderizar el mapa por cada iteración del jugardor
     enemyPositions = [];//lo que hacemos es eliminar todo lo que teníamos para que salga otra vez vacía
@@ -104,25 +115,57 @@ function movePlayer () { //renderizar a nuestro player
 
     //condicional para ver si hubo colision con la giftPosition
     //con tantos condicionales es probable que nos den muchos decimales y a la hora de encontrar la colisión puede que alguno de estos decimales no coincida y nos de un error aunqeu estemos colisionando, por ese motivo ponemos el método .toFixed() para que solo nos cuente los decimales que nosotros le pongamos en el método y no haya errores en el juego
-    const giftCollisionX = playerPosition.x == giftPosition.x;//el método .toFixed() no funciona ahora en las giftPositions porque al ser un undefined, son strings y solo vale para números
-    const giftCollisionY = playerPosition.y == giftPosition.y;
+    const giftCollisionX = playerPosition.x.toFixed(0) == giftPosition.x.toFixed(0);//el método .toFixed() no funciona ahora en las giftPositions porque al ser un undefined, son strings y solo vale para números
+    const giftCollisionY = playerPosition.y.toFixed(0) == giftPosition.y.toFixed(0);
     const giftCollisions = giftCollisionX && giftCollisionY;
 
     if (giftCollisions) {
-        console.log('Llegaste por los pelos! 😮‍💨');
+        // console.log('Llegaste por los pelos! 😮‍💨');
+        levelWin();
     }
 
     const enemyCollision = enemyPositions.find( enemy => { //esto es para detectar las colisiones con las kks
-        const enemyCollisionX = enemy.x == playerPosition.x;
-        const enemyCollisionY = enemy.y == playerPosition.y;
+        const enemyCollisionX = enemy.x.toFixed(0) == playerPosition.x.toFixed(0);
+        const enemyCollisionY = enemy.y.toFixed(0) == playerPosition.y.toFixed(0);
 
         return enemyCollisionX && enemyCollisionY;
     })
     if (enemyCollision){
-        console.warn('Te cagaste wei! 🤢');
+        // console.warn('Te cagaste wei! 🤢');
+        levelFail();
     }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 };
+
+function levelWin() { //función para cunado lleguemos al regalos y nos cambie de mapa automáticamente
+    console.log('LLegaste por los pelos! 😮‍💨🤕');
+    level++;
+    return;
+}
+function gameWin () {
+    console.log('Has llegado limpio a la meta!');
+}
+function levelFail () {
+    console.warn('Te hiciste popo wei! 🤢');
+    lives--;
+
+    if (lives <= 0) { //para ir disminuyendo las vidas del jugador
+        level = 0;
+        lives = 5;
+    }
+    console.log({lives});
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    startGame();
+}
+function showLives () {
+    const heartArray = Array(lives).fill(emojis['HEART']) //esto es una propiedad que nos permite crear un array con los elementos que tanga la variable interna, en este caso lives
+
+    console.log(heartArray);
+    // spanLives.innerHTML = hearthArray;//el problema de este código es que me aparecen las comas entre los corazones, los distintos arrays por tanto, el mejor código sería el siguiente:
+    spanLives.innerHTML = "";
+    heartArray.forEach(heart => spanLives.append(heart));
+}
 
 //funciones para que los botones duncionen
 btnUp.addEventListener('click', moveUp);

@@ -8,10 +8,11 @@ const emojis = {
     'O': '🚪',
     'X': '💩',
     'I': '🚽',
-    'PLAYER': '🏃🏽',
-    'POPO_COLLISION': '👀',
+    'PLAYER': '👶🏽',
+    'POPO_COLLISION': '👀🤢',
     'GAME_OVER': '💩🤦🏼‍♂️😶‍🌫️',
     'WIN': '🏆',
+    'HEART': '💙'
   };
   
   const maps = [];
