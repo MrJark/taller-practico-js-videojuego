@@ -23,7 +23,7 @@ const playerPosition = {
 const giftPosition = {
     x: undefined,
     y: undefined,
-  };
+};
 let enemyPositions = []; //es let par poder darle unos valores distintos cuando la limpiemos
 
 window.addEventListener('load', setCanvasSize); //esta linea nos dice que a venas la pantalla carge (load) inicialice la función startGame
@@ -71,21 +71,21 @@ function startGame() {
             const positionX = elementsSize * (columsIndex + 1);
             const positionY = elementsSize * (rowIndex + 1);// las positionX y positionY nos dan las posiciones de cada uno de los emojis y a estos le sumamos 1 porque siempre empezamos a contar desde el 0 y los elementos, en este caso los emojis, sus inicios son el propio final del emoji, por tanto si queremos que aparezcan enteros tenemos que sumarle uno para que así estén en la posición visible. (Seria como empezar en la posición dos y acabar en la 1 ya que el inicio de la columna es el propio final del mismo) 
             
-            if ( colums == 'O' ) {//condicional para colocar a nuestro jugador
+            if (colums == 'O') {//condicional para colocar a nuestro jugador
                 if (!playerPosition.x && !playerPosition.y) {//este segundo condicional nos sire para decir que si playerPosition es != a undefined, guarde esas variables cuando haga el clearRect
                     playerPosition.x = positionX;
                     playerPosition.y = positionY;
                     // console.log({playerPosition});
-                } else if ( colums == 'I' ) { //este segundo if es el que colocamos para cuando nuestro jugador se encuentre con el "regalio" del wc
-                    giftPosition.x = positionX;
-                    giftPosition.y = positionY;
-                    // console.log({giftPosition});
-                } else if ( colums == 'X' ) { // este if lo colocamos para encontrar las colisiones con las kks
-                    enemyPositions.push({ //le tenemos que hacer push porque es un array
-                        x: positionX,
-                        y: positionY,
-                    });
-                }
+                } 
+            } else if (colums == 'I') { //este segundo if es el que colocamos para cuando nuestro jugador se encuentre con el "regalio" del wc
+                giftPosition.x = positionX;
+                giftPosition.y = positionY;
+                // console.log({giftPosition});
+            } else if (colums == 'X') { // este if lo colocamos para encontrar las colisiones con las kks
+                enemyPositions.push({ //le tenemos que hacer push porque es un array
+                    x: positionX,
+                    y: positionY,
+                });
             };
             game.fillText(emoji, positionX, positionY);
         });
@@ -104,7 +104,7 @@ function movePlayer () { //renderizar a nuestro player
 
     //condicional para ver si hubo colision con la giftPosition
     //con tantos condicionales es probable que nos den muchos decimales y a la hora de encontrar la colisión puede que alguno de estos decimales no coincida y nos de un error aunqeu estemos colisionando, por ese motivo ponemos el método .toFixed() para que solo nos cuente los decimales que nosotros le pongamos en el método y no haya errores en el juego
-    const giftCollisionX = playerPosition.x == giftPosition.x;
+    const giftCollisionX = playerPosition.x == giftPosition.x;//el método .toFixed() no funciona ahora en las giftPositions porque al ser un undefined, son strings y solo vale para números
     const giftCollisionY = playerPosition.y == giftPosition.y;
     const giftCollisions = giftCollisionX && giftCollisionY;
 
