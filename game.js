@@ -11,7 +11,8 @@ const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
-
+const spanRecord = document.querySelector('#record');
+const pResult = document.querySelector('#result');
 
 let canvasSize;
 let elementsSize;
@@ -21,6 +22,7 @@ let lives = 5;
 let timeStart;
 let timePlayer;
 let timeInterval;
+
 
 //creamos una variable con dos posiciones para poder mover a nuestro humano por el campo de minas
 //Recordemos!!! 
@@ -150,12 +152,35 @@ function movePlayer () { //renderizar a nuestro player
 function levelWin() { //función para cunado lleguemos al regalos y nos cambie de mapa automáticamente
     console.log('LLegaste por los pelos! 😮‍💨🤕');
     level++;
-    return;
+    startGame();
 }
 function gameWin () {
     console.log('Has llegado limpio a la meta!');
     clearInterval(timeInterval);//esto lo que nos hace es 'matar' la función timeInterval cuando ganamos
-}
+
+    //localStorage() nos guarda información en el navegador hasta que nosotros las eliminemos manualmente y no dependen de del código de js que se elimina ada vez que cierras el navegador, aquí se te queda guardado para 'siempre' o hasta que tu las elimines.
+    // son 3 los métodos:
+        //localStorage.getItem (nombre, valor) -> para saber que hay guardado
+        //localStorage.setItem () -> para introducir lo que queres
+        //locarStorage.removeItem() -> para eliminar lo que hayaguado
+    const recordTime = localStorage.getItem('record_time');
+    const playerTime = Date.now() - timeStart;
+    if (recordTime) {
+        //para cuando ya había un record guardado
+        if (recordTime >= playerTime) {
+            localStorage.setItem('record_time', playerTime);
+            pResult.innerHTML = 'Superaste el racord Beby. Good job 👍🏼';
+        }else {
+            pResult.innerHTML = 'No superaste el record. Sorry 😞';
+        }
+    } else {
+        //si no había record gaurdado
+        localStorage.setItem('record_time', playerTime);
+        pResult.innerHTML = 'Primera vez? Muy bien, pero ahora trata de superarte';
+    }
+
+    console.log({recordTime, playerTime});
+};
 function levelFail () {
     console.warn('Te hiciste popo wei! 🤢');
     lives--;
@@ -163,9 +188,8 @@ function levelFail () {
     if (lives <= 0) { //para ir reseteando las vidas y el tiempo del jugador
         level = 0;
         lives = 5;
-        timeInterval = undefined;
+        timeStart = undefined;
     }
-    console.log({lives});
     playerPosition.x = undefined;
     playerPosition.y = undefined;
     startGame();
@@ -179,8 +203,12 @@ function showLives () {
     heartArray.forEach(heart => spanLives.append(heart));
 }
 function showTime() {
+    //la funcion Date.now() me da el tiempo en milisegundos que lleva el día a tiempo real
     spanTime.innerHTML = Date.now() - timeStart; //esto me resta el tiempo actual del dia en milisegundos menos el timeStart que es el tiempo del día en el que empezó el juego y por tanto, es el tiempo que llevo jugando
-}//la funcion Date.now() me da el tiempo en milisegundos que lleva el día a tiempo real
+}
+function showRecord () {
+    spanRecord.innerHTML = localStorage.getItem('record_time');
+}
 
 //funciones para que los botones duncionen
 btnUp.addEventListener('click', moveUp);
