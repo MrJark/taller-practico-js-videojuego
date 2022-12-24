@@ -10,6 +10,7 @@ const btnDown = document.querySelector('#down');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const spanLives = document.querySelector('#lives');
+const spanTime = document.querySelector('#time');
 
 
 let canvasSize;
@@ -165,6 +166,9 @@ function showLives () {
     // spanLives.innerHTML = hearthArray;//el problema de este código es que me aparecen las comas entre los corazones, los distintos arrays por tanto, el mejor código sería el siguiente:
     spanLives.innerHTML = "";
     heartArray.forEach(heart => spanLives.append(heart));
+}
+function showTime() {
+    
 }
 
 //funciones para que los botones duncionen
