@@ -18,6 +18,10 @@ let elementsSize;
 let level = 0;
 let lives = 5;
 
+let timeStart;
+let timePlayer;
+let timeInterval;
+
 //creamos una variable con dos posiciones para poder mover a nuestro humano por el campo de minas
 //Recordemos!!! 
 //Las variables tipo const no se pueden modificar sin embargo, en estas le estamos dando distintas posiiones dependiendo del y esto es posible gracias a que son objetos y son tratados de distinta manera a las const tipo numéricas o de strings
@@ -64,6 +68,11 @@ function startGame() {
         gameWin();
         return;
     }
+
+    if (!timeStart) {
+        timeStart = Date.now();//esta función nos permite contar en milisegundos desde que se inicia el juego y por tanto, el jugador comienza
+        timeInterval = setInterval(showTime ,100); //esta me deja mostrar el tiempo casa 100 milisegundos
+    };
     
     const mapRow = map.trim().split('\n');// esto es para crear unn mapa más limpio. El .trim() nos elimina los espacios vacíos al inicio y final de cada row (nos lo limpia) y con el .split('\n') le estamos diciendo que haga un salto  de linea (creando un nuevo elemento) cuando aparezca el '\n'
     const mapRowColums = mapRow.map(row => row.trim().split(''));// aquí estamos creando un arreglo de cada row en el que le estamos diciendo que por cada row, sea cada una de ella, no solo un string y ya, sino que sea un arreglo donde cada letra es un elemento
@@ -116,8 +125,8 @@ function movePlayer () { //renderizar a nuestro player
 
     //condicional para ver si hubo colision con la giftPosition
     //con tantos condicionales es probable que nos den muchos decimales y a la hora de encontrar la colisión puede que alguno de estos decimales no coincida y nos de un error aunqeu estemos colisionando, por ese motivo ponemos el método .toFixed() para que solo nos cuente los decimales que nosotros le pongamos en el método y no haya errores en el juego
-    const giftCollisionX = playerPosition.x.toFixed(0) == giftPosition.x.toFixed(0);//el método .toFixed() no funciona ahora en las giftPositions porque al ser un undefined, son strings y solo vale para números
-    const giftCollisionY = playerPosition.y.toFixed(0) == giftPosition.y.toFixed(0);
+    const giftCollisionX = playerPosition.x.toFixed(2) == giftPosition.x.toFixed(2);//el método .toFixed() no funciona ahora en las giftPositions porque al ser un undefined, son strings y solo vale para números
+    const giftCollisionY = playerPosition.y.toFixed(2) == giftPosition.y.toFixed(2);
     const giftCollisions = giftCollisionX && giftCollisionY;
 
     if (giftCollisions) {
@@ -126,8 +135,8 @@ function movePlayer () { //renderizar a nuestro player
     }
 
     const enemyCollision = enemyPositions.find( enemy => { //esto es para detectar las colisiones con las kks
-        const enemyCollisionX = enemy.x.toFixed(0) == playerPosition.x.toFixed(0);
-        const enemyCollisionY = enemy.y.toFixed(0) == playerPosition.y.toFixed(0);
+        const enemyCollisionX = enemy.x.toFixed(2) == playerPosition.x.toFixed(2);
+        const enemyCollisionY = enemy.y.toFixed(2) == playerPosition.y.toFixed(2);
 
         return enemyCollisionX && enemyCollisionY;
     })
@@ -145,14 +154,16 @@ function levelWin() { //función para cunado lleguemos al regalos y nos cambie d
 }
 function gameWin () {
     console.log('Has llegado limpio a la meta!');
+    clearInterval(timeInterval);//esto lo que nos hace es 'matar' la función timeInterval cuando ganamos
 }
 function levelFail () {
     console.warn('Te hiciste popo wei! 🤢');
     lives--;
 
-    if (lives <= 0) { //para ir disminuyendo las vidas del jugador
+    if (lives <= 0) { //para ir reseteando las vidas y el tiempo del jugador
         level = 0;
         lives = 5;
+        timeInterval = undefined;
     }
     console.log({lives});
     playerPosition.x = undefined;
@@ -168,8 +179,8 @@ function showLives () {
     heartArray.forEach(heart => spanLives.append(heart));
 }
 function showTime() {
-    
-}
+    spanTime.innerHTML = Date.now() - timeStart; //esto me resta el tiempo actual del dia en milisegundos menos el timeStart que es el tiempo del día en el que empezó el juego y por tanto, es el tiempo que llevo jugando
+}//la funcion Date.now() me da el tiempo en milisegundos que lleva el día a tiempo real
 
 //funciones para que los botones duncionen
 btnUp.addEventListener('click', moveUp);
@@ -233,4 +244,4 @@ function moveByKeys(event) { //est ees el mismo código que el de abajo pero má
 //         console.warn('🤨 No estás entendiendo el juego...');
 //     };
 // };
-}
+};
