@@ -40,6 +40,9 @@ let enemyPositions = []; //es let par poder darle unos valores distintos cuando 
 window.addEventListener('load', setCanvasSize); //esta linea nos dice que a venas la pantalla carge (load) inicialice la función startGame
 window.addEventListener('resize', setCanvasSize); //este evento lo que nos hace es recargar la página cuando sufra nuestra pantalla un resize. Ya sea en portatil para abir la consola o en el móvil cuando giramos la pantalla. El problema de este es que tenemos que vincular al resize los elementos que ya estaban en la pantalla que ya automaticamente me los elimina todos
 
+// function fixNumber (n) { //para eliminar los errores de los decimales y los problemas de no coincidencia
+//     return Number(n.toFixed(2));
+// }
 
 //creanos esta función dividiendo el código que estaba antes en startGame para que así esté todo más limpio y ordenado
 function setCanvasSize () {
@@ -57,6 +60,10 @@ function setCanvasSize () {
 
     //calculo del ancho y alto de los elementos a partir del ancho y alto del canvas (grilla de 10x10) por tanto necesitamos que nuestros objetos midan 10px para que quepan 10 por fila y columna
     elementsSize = canvasSize / 10; //para darle el valor del 10% en un canvas de 100% y quepan 10 del 10%
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    //estas dos anteriores las ponemos para cuando modificamos el tamaño del canvas, que se modifique también la del jugador y no se pierda estando siempre en la misma posición
 
     startGame();
 };
@@ -127,8 +134,8 @@ function movePlayer () { //renderizar a nuestro player
 
     //condicional para ver si hubo colision con la giftPosition
     //con tantos condicionales es probable que nos den muchos decimales y a la hora de encontrar la colisión puede que alguno de estos decimales no coincida y nos de un error aunqeu estemos colisionando, por ese motivo ponemos el método .toFixed() para que solo nos cuente los decimales que nosotros le pongamos en el método y no haya errores en el juego
-    const giftCollisionX = playerPosition.x.toFixed(2) == giftPosition.x.toFixed(2);//el método .toFixed() no funciona ahora en las giftPositions porque al ser un undefined, son strings y solo vale para números
-    const giftCollisionY = playerPosition.y.toFixed(2) == giftPosition.y.toFixed(2);
+    const giftCollisionX = playerPosition.x.toFixed(0) == giftPosition.x.toFixed(0);//el método .toFixed() no funciona ahora en las giftPositions porque al ser un undefined, son strings y solo vale para números
+    const giftCollisionY = playerPosition.y.toFixed(0) == giftPosition.y.toFixed(0);
     const giftCollisions = giftCollisionX && giftCollisionY;
 
     if (giftCollisions) {
@@ -137,8 +144,8 @@ function movePlayer () { //renderizar a nuestro player
     }
 
     const enemyCollision = enemyPositions.find( enemy => { //esto es para detectar las colisiones con las kks
-        const enemyCollisionX = enemy.x.toFixed(2) == playerPosition.x.toFixed(2);
-        const enemyCollisionY = enemy.y.toFixed(2) == playerPosition.y.toFixed(2);
+        const enemyCollisionX = enemy.x.toFixed(0) == playerPosition.x.toFixed(0);
+        const enemyCollisionY = enemy.y.toFixed(0) == playerPosition.y.toFixed(0);
 
         return enemyCollisionX && enemyCollisionY;
     })
