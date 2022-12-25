@@ -187,7 +187,6 @@ function gameWin () {
         localStorage.setItem('record_time', playerTime);
         pResult.innerHTML = 'Primera vez? Muy bien, pero ahora trata de superarte';
     }
-
 };
 function levelFail () {
     console.warn('Te hiciste popo wei! 🤢');
@@ -215,7 +214,7 @@ function showTime() {
     spanTime.innerHTML = Date.now() - timeStart; //esto me resta el tiempo actual del dia en milisegundos menos el timeStart que es el tiempo del día en el que empezó el juego y por tanto, es el tiempo que llevo jugando
 }
 function showRecord () {
-    spanRecord.innerHTML = recordTime;
+    spanRecord.innerHTML = localStorage.getItem('record_time');
 }
 function finishReload () {
     location.reload();//para que el juego se reinicie. Una función del propio navegador, como si fuera la recarga manual.
