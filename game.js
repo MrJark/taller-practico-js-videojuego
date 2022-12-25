@@ -13,6 +13,7 @@ const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
 const spanRecord = document.querySelector('#record');
 const pResult = document.querySelector('#result');
+const btnReload = document.querySelector('#reload');
 
 let canvasSize;
 let elementsSize;
@@ -39,6 +40,7 @@ let enemyPositions = []; //es let par poder darle unos valores distintos cuando 
 
 window.addEventListener('load', setCanvasSize); //esta linea nos dice que a venas la pantalla carge (load) inicialice la función startGame
 window.addEventListener('resize', setCanvasSize); //este evento lo que nos hace es recargar la página cuando sufra nuestra pantalla un resize. Ya sea en portatil para abir la consola o en el móvil cuando giramos la pantalla. El problema de este es que tenemos que vincular al resize los elementos que ya estaban en la pantalla que ya automaticamente me los elimina todos
+btnReload.addEventListener('click', finishReload);//para añadir la funcionalidad del botón de recargar la página
 
 // function fixNumber (n) { //para eliminar los errores de los decimales y los problemas de no coincidencia
 //     return Number(n.toFixed(2));
@@ -186,7 +188,6 @@ function gameWin () {
         pResult.innerHTML = 'Primera vez? Muy bien, pero ahora trata de superarte';
     }
 
-    console.log({recordTime, playerTime});
 };
 function levelFail () {
     console.warn('Te hiciste popo wei! 🤢');
@@ -214,7 +215,10 @@ function showTime() {
     spanTime.innerHTML = Date.now() - timeStart; //esto me resta el tiempo actual del dia en milisegundos menos el timeStart que es el tiempo del día en el que empezó el juego y por tanto, es el tiempo que llevo jugando
 }
 function showRecord () {
-    spanRecord.innerHTML = localStorage.getItem('record_time');
+    spanRecord.innerHTML = recordTime;
+}
+function finishReload () {
+    location.reload();//para que el juego se reinicie. Una función del propio navegador, como si fuera la recarga manual.
 }
 
 //funciones para que los botones duncionen
@@ -261,6 +265,7 @@ function moveRight() {
         startGame();
     }
 };
+
 function moveByKeys(event) { //est ees el mismo código que el de abajo pero más estético y limpio (solo se puede usar en ocasiones muy específicas)
     if (event.key == 'ArrowUp') moveUp();
     else if (event.key == 'ArrowLeft') moveLeft();

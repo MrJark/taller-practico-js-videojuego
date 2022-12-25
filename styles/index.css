@@ -28,6 +28,9 @@ body {
     margin: 0 auto;
     width: 100%;
   }
+  .reload {
+    width: auto;
+  }
   
   button {
     background-color: #7700ff;
